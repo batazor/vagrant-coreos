@@ -1,8 +1,5 @@
-#cloud-config
 
 coreos:
-  update:
-    reboot-strategy: "off"
   etcd2:
     name: {{ETCD_NODE_NAME}}
     initial-cluster: {{ETCD_INITIAL_CLUSTER}}

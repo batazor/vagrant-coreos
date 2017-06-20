@@ -18,11 +18,14 @@ $vm_memory = 1024
 $vm_cpus = 1
 $vb_cpuexecutioncap = 100
 
+# PATH
+CLOUD_CONFIG_PATH = File.expand_path("config/user_data.yaml")
+ETCD_CONFIG_PATH  = File.expand_path("config/etcd.yaml")
+
+
 def getIP(num)
   return "172.17.8.#{num+100}"
 end
-
-CLOUD_CONFIG_PATH = File.expand_path("user_data.yaml")
 
 # ETCD =========================================================================
 etcdIPs = [*1..$num_instances].map{ |i| getIP(i) }
@@ -63,14 +66,22 @@ Vagrant.configure("2") do |config|
       # using a specific IP.
       config.vm.network :private_network, ip: getIP(i)
 
-      # Set config files =======================================================
-      data = YAML.load(IO.readlines(CLOUD_CONFIG_PATH)[1..-1].join)
-      # ETCD CONFIG
-      data['coreos']['etcd2']['name'] = vm_name
-      data['coreos']['etcd2']['initial-cluster'] = initial_etcd_cluster
+      # COREOS CONFIG ==========================================================
+      user_data = YAML.load(IO.readlines(CLOUD_CONFIG_PATH)[1..-1].join)
+
+      # ETCD CONFIG ============================================================
+      etcd = YAML.load(IO.readlines(ETCD_CONFIG_PATH)[1..-1].join)
+      etcd['coreos']['etcd2']['name'] = vm_name
+      etcd['coreos']['etcd2']['initial-cluster'] = initial_etcd_cluster
+      etcd['coreos']['etcd2']['listen-peer-urls'] = "http://#{getIP(i)}:2380"
+      etcd['coreos']['etcd2']['initial-advertise-peer-urls'] = "http://#{getIP(i)}:2380"
+
+      user_data["coreos"]["etcd2"] = etcd["coreos"]["etcd2"]
+      user_data["coreos"]["units"] += etcd["coreos"]["units"]
+      # ========================================================================
 
       etcd_config_file = Tempfile.new('etcd_config', :binmode => true)
-      etcd_config_file.write("#cloud-config\n#{data.to_yaml}")
+      etcd_config_file.write("#cloud-config\n#{user_data.to_yaml}")
       etcd_config_file.close
 
       config.vm.provision :file, :source => etcd_config_file.path, :destination => "/tmp/vagrantfile-user-data"
