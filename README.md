@@ -1,4 +1,4 @@
-# CoreOS
+# vagrant-coreos-kubernetes
 
 ### Getting start
 
