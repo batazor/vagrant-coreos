@@ -21,6 +21,7 @@ $vb_cpuexecutioncap = 100
 # PATH
 CLOUD_CONFIG_PATH = File.expand_path("config/user_data.yaml")
 ETCD_CONFIG_PATH  = File.expand_path("config/etcd.yaml")
+FLANNEL_CONFIG_PATH  = File.expand_path("config/flannel.yaml")
 
 
 def getIP(num)
@@ -78,6 +79,11 @@ Vagrant.configure("2") do |config|
 
       user_data["coreos"]["etcd2"] = etcd["coreos"]["etcd2"]
       user_data["coreos"]["units"] += etcd["coreos"]["units"]
+
+      # FLANNEL CONFIG =========================================================
+      flannel = YAML.load(IO.readlines(FLANNEL_CONFIG_PATH)[1..-1].join)
+      user_data["coreos"]["units"] += flannel["coreos"]["units"]
+
       # ========================================================================
 
       etcd_config_file = Tempfile.new('etcd_config', :binmode => true)

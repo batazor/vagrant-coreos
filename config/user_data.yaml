@@ -3,12 +3,6 @@ coreos:
   update:
     reboot-strategy: "off"
   units:
-    - name: flanneld.service
-      drop-ins:
-      - name: 50-network-config.conf
-        content: |
-          [Service]
-          ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{"Network": "10.2.0.0/16", "Backend": {"Type": "vxlan"}}'
     - name: docker.service
       command: start
     - name: update-engine.service
