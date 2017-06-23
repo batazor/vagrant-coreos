@@ -7,20 +7,20 @@ require 'tempfile'
 require 'yaml'
 
 # Defaults for config options defined in CONFIG
-$num_instances = 1
+$num_instances = ENV['BOX_NAME'].to_i
 
-$instance_name_prefix = "core"
-$update_channel = "stable"
-$image_version = "current"
+$instance_name_prefix = ENV['INSTANCE_NAME_PREFIX']
+$update_channel       = ENV['UPDATE_CHANNEL']
+$image_version        = ENV['IMAGE_VERSION']
 
-$vm_gui = false
-$vm_memory = 1024
-$vm_cpus = 1
-$vb_cpuexecutioncap = 100
+$vm_gui             = ENV['VM_GUI'].to_b
+$vm_memory          = ENV['VM_MEMORY'].to_i
+$vm_cpus            = VM_CPUS['VM_MEMORY'].to_i
+$vb_cpuexecutioncap = VM_CPUS['VB_CPUEXECUTIONCAP'].to_i
 
 # PATH
-CLOUD_CONFIG_PATH = File.expand_path("template/user_data.yaml")
-ETCD_CONFIG_PATH  = File.expand_path("template/etcd.yaml")
+CLOUD_CONFIG_PATH    = File.expand_path("template/user_data.yaml")
+ETCD_CONFIG_PATH     = File.expand_path("template/etcd.yaml")
 FLANNEL_CONFIG_PATH  = File.expand_path("template/flannel.yaml")
 
 
@@ -34,6 +34,9 @@ initial_etcd_cluster = etcdIPs.map.with_index{ |ip, i| "#{"%s-%02d" % [$instance
 
 
 Vagrant.configure("2") do |config|
+  # Enable plugins =============================================================
+  config.env.enable # https://github.com/gosuri/vagrant-env
+
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "coreos-%s" % $update_channel
