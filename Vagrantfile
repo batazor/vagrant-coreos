@@ -7,7 +7,7 @@ require 'tempfile'
 require 'yaml'
 
 # Defaults for config options defined in CONFIG
-$num_instances = 3
+$num_instances = 1
 
 $instance_name_prefix = "core"
 $update_channel = "stable"
@@ -19,9 +19,9 @@ $vm_cpus = 1
 $vb_cpuexecutioncap = 100
 
 # PATH
-CLOUD_CONFIG_PATH = File.expand_path("config/user_data.yaml")
-ETCD_CONFIG_PATH  = File.expand_path("config/etcd.yaml")
-FLANNEL_CONFIG_PATH  = File.expand_path("config/flannel.yaml")
+CLOUD_CONFIG_PATH = File.expand_path("template/user_data.yaml")
+ETCD_CONFIG_PATH  = File.expand_path("template/etcd.yaml")
+FLANNEL_CONFIG_PATH  = File.expand_path("template/flannel.yaml")
 
 
 def getIP(num)
@@ -92,6 +92,12 @@ Vagrant.configure("2") do |config|
 
       config.vm.provision :file, :source => etcd_config_file.path, :destination => "/tmp/vagrantfile-user-data"
       config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
+
+      # SYNCED DOLDERS =========================================================
+      config.vm.synced_folder "config", "/home/core/config"
+
+      # EXEC SCRIPT GENERATION CERTS ===========================================
+      config.vm.provision "shell", path: "script/generate_ssl.sh", privileged: false
     end
   end
 end
