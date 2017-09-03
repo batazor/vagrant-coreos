@@ -13,6 +13,10 @@ mv .env.example .env
 vagrant up
 ```
 
+### Kubernetes
+
+Use [k8s-generator-config](https://github.com/batazor/k8s-generator-config) for run K8S.
+
 ### Setting
 
 For settings use file `.env`
