@@ -8,7 +8,7 @@ require 'yaml'
 
 # PATH
 CLOUD_CONFIG_PATH    = File.expand_path("template/user_data.yaml")
-ETCD_CONFIG_PATH     = File.expand_path("template/etcd.yaml")
+ETCD_CONFIG_PATH     = File.expand_path("template/etcd-member.yaml")
 FLANNEL_CONFIG_PATH  = File.expand_path("template/flannel.yaml")
 
 def getIP(num)
@@ -75,13 +75,14 @@ Vagrant.configure("2") do |config|
 
       # ETCD CONFIG ============================================================
       etcd = YAML.load(IO.readlines(ETCD_CONFIG_PATH)[1..-1].join)
-      etcd['coreos']['etcd2']['name'] = vm_name
-      etcd['coreos']['etcd2']['initial-cluster'] = initial_etcd_cluster
-      etcd['coreos']['etcd2']['listen-peer-urls'] = "http://#{getIP(i)}:2380"
-      etcd['coreos']['etcd2']['initial-advertise-peer-urls'] = "http://#{getIP(i)}:2380"
 
-      user_data["coreos"]["etcd2"] = etcd["coreos"]["etcd2"]
-      user_data["coreos"]["units"] += etcd["coreos"]["units"]
+      ETCD_UNITS = etcd['coreos']['units']
+      ETCD_UNITS[0]['content'] = ETCD_UNITS[0]['content'] % {
+        :ETCD_NODE_NAME => vm_name,
+        :ETCD_INITIAL_CLUSTER => initial_etcd_cluster
+      }
+
+      user_data["coreos"]["units"] += ETCD_UNITS
 
       # FLANNEL CONFIG =========================================================
       flannel = YAML.load(IO.readlines(FLANNEL_CONFIG_PATH)[1..-1].join)
