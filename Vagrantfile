@@ -76,13 +76,14 @@ Vagrant.configure("2") do |config|
       # ETCD CONFIG ============================================================
       etcd = YAML.load(IO.readlines(ETCD_CONFIG_PATH)[1..-1].join)
 
-      ETCD_UNITS = etcd['coreos']['units']
-      ETCD_UNITS[0]['content'] = ETCD_UNITS[0]['content'] % {
+      etcd_units = etcd['coreos']['units']
+      etcd_units[0]['content'] = etcd_units[0]['content'] % {
         :ETCD_NODE_NAME => vm_name,
-        :ETCD_INITIAL_CLUSTER => initial_etcd_cluster
+        :ETCD_INITIAL_CLUSTER => initial_etcd_cluster,
+        :ETCD_IMAGE_TAG => ENV['ETCD_IMAGE_TAG']
       }
 
-      user_data["coreos"]["units"] += ETCD_UNITS
+      user_data["coreos"]["units"] += etcd_units
 
       # FLANNEL CONFIG =========================================================
       flannel = YAML.load(IO.readlines(FLANNEL_CONFIG_PATH)[1..-1].join)
