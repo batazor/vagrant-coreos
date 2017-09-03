@@ -7,9 +7,9 @@ require 'tempfile'
 require 'yaml'
 
 # PATH
-CLOUD_CONFIG_PATH    = File.expand_path("template/user_data.yaml")
-ETCD_CONFIG_PATH     = File.expand_path("template/etcd-member.yaml")
-FLANNEL_CONFIG_PATH  = File.expand_path("template/flannel.yaml")
+CLOUD_CONFIG_PATH    = File.expand_path("template/cloud-config/user_data.yaml")
+ETCD_CONFIG_PATH     = File.expand_path("template/cloud-config/etcd-member.yaml")
+FLANNEL_CONFIG_PATH  = File.expand_path("template/cloud-config/flannel.yaml")
 
 def getIP(num)
   return "172.17.8.#{num+100}"
