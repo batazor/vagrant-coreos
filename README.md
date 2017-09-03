@@ -1,8 +1,15 @@
 # vagrant-coreos-kubernetes
 
+Cluster for work with Kubernetes on CoreOS
+
 ### Getting start
 
 ```
+# Install dependencies
+vagrant plugin install vagrant-env
+
+# Run
+mv .env.example .env
 vagrant up
 ```
 

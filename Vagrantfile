@@ -6,36 +6,36 @@ require 'open-uri'
 require 'tempfile'
 require 'yaml'
 
-# Defaults for config options defined in CONFIG
-$num_instances = ENV['BOX_NAME'].to_i
-
-$instance_name_prefix = ENV['INSTANCE_NAME_PREFIX']
-$update_channel       = ENV['UPDATE_CHANNEL']
-$image_version        = ENV['IMAGE_VERSION']
-
-$vm_gui             = ENV['VM_GUI'].to_b
-$vm_memory          = ENV['VM_MEMORY'].to_i
-$vm_cpus            = VM_CPUS['VM_MEMORY'].to_i
-$vb_cpuexecutioncap = VM_CPUS['VB_CPUEXECUTIONCAP'].to_i
-
 # PATH
 CLOUD_CONFIG_PATH    = File.expand_path("template/user_data.yaml")
 ETCD_CONFIG_PATH     = File.expand_path("template/etcd.yaml")
 FLANNEL_CONFIG_PATH  = File.expand_path("template/flannel.yaml")
 
-
 def getIP(num)
   return "172.17.8.#{num+100}"
 end
 
-# ETCD =========================================================================
-etcdIPs = [*1..$num_instances].map{ |i| getIP(i) }
-initial_etcd_cluster = etcdIPs.map.with_index{ |ip, i| "#{"%s-%02d" % [$instance_name_prefix, (i + 1)]}=http://#{ip}:2380" }.join(",")
-
-
 Vagrant.configure("2") do |config|
   # Enable plugins =============================================================
   config.env.enable # https://github.com/gosuri/vagrant-env
+
+  # ENV ========================================================================
+  # Defaults for config options defined in CONFIG
+  $num_instances = ENV['NUM_INSTANCES'].to_i
+
+  $instance_name_prefix = ENV['INSTANCE_NAME_PREFIX']
+  $update_channel       = ENV['UPDATE_CHANNEL']
+  $image_version        = ENV['IMAGE_VERSION']
+
+  $vm_gui             = ENV['VM_GUI'].to_s == "true"
+  $vm_memory          = ENV['VM_MEMORY'].to_i
+  $vm_cpus            = ENV['VM_CPUS'].to_i
+  $vb_cpuexecutioncap = ENV['VB_CPUEXECUTIONCAP'].to_i
+
+  # ETCD =========================================================================
+  etcdIPs = [*1..$num_instances].map{ |i| getIP(i) }
+  initial_etcd_cluster = etcdIPs.map.with_index{ |ip, i| "#{"%s-%02d" % [$instance_name_prefix, (i + 1)]}=http://#{ip}:2380" }.join(",")
+
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
