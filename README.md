@@ -34,5 +34,5 @@ For settings use file `.env`
 | VM_CPUS               | 1             |                                      |
 | VB_CPUEXECUTIONCAP    | 100           |                                      |
 |-----------------------|---------------|--------------------------------------|
-| ETCD_IMAGE_TAG        | v3.2.7        | Version use ETCD                     |
+| ETCD_IMAGE_TAG        | v3.2.8        | Version use ETCD                     |
 |-----------------------|---------------|--------------------------------------|
