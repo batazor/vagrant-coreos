@@ -1,4 +1,4 @@
-# vagrant-coreos-kubernetes
+# vagrant-coreos
 
 Cluster for work with Kubernetes on CoreOS
 
@@ -15,7 +15,7 @@ vagrant up
 
 ### Kubernetes
 
-Use [k8s-generator-config](https://github.com/batazor/k8s-generator-config) for run K8S.
+Use [k8s-generator-config](https://batazor.github.io/k8s-generator-config) for run K8S.
 
 ### Setting
 

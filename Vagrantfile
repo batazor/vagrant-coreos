@@ -89,7 +89,7 @@ Vagrant.configure("2") do |config|
       flannel = YAML.load(IO.readlines(FLANNEL_CONFIG_PATH)[1..-1].join)
       user_data["coreos"]["units"] += flannel["coreos"]["units"]
 
-      # ========================================================================
+      # ETCD CONFIG ============================================================
 
       etcd_config_file = Tempfile.new('etcd_config', :binmode => true)
       etcd_config_file.write("#cloud-config\n#{user_data.to_yaml}")
@@ -98,8 +98,11 @@ Vagrant.configure("2") do |config|
       config.vm.provision :file, :source => etcd_config_file.path, :destination => "/tmp/vagrantfile-user-data"
       config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
 
-      # SYNCED DOLDERS =========================================================
-      config.vm.synced_folder "config", "/home/core/config"
+      # SYNCED FOLDERS =========================================================
+      config.vm.synced_folder "cert", "/home/core/cert", type: "nfs"
+
+      config.nfs.map_uid = Process.uid
+      config.nfs.map_gid = Process.gid
     end
   end
 end
