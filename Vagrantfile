@@ -100,9 +100,6 @@ Vagrant.configure("2") do |config|
 
       # SYNCED DOLDERS =========================================================
       config.vm.synced_folder "config", "/home/core/config"
-
-      # EXEC SCRIPT GENERATION CERTS ===========================================
-      config.vm.provision "shell", path: "script/generate_ssl.sh", privileged: false
     end
   end
 end
