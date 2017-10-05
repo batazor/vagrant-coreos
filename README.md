@@ -23,7 +23,7 @@ For settings use file `.env`
 
 | **NAME**              | **Default**   | **Description**                      |
 |-----------------------|---------------|--------------------------------------|
-| NUM_INSTANCES         | 1             | count machine                        |
+| NUM_INSTANCES         | 3             | count machine                        |
 |-----------------------|---------------|--------------------------------------|
 | INSTANCE_NAME_PREFIX  | core          |                                      |
 | UPDATE_CHANNEL        | stable        |                                      |
