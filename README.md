@@ -6,6 +6,7 @@ Cluster for work with Kubernetes on CoreOS
 
 ```
 # Install dependencies
+sudo apt-get install nfs-kernel-server // Install NFS-server
 vagrant plugin install vagrant-env
 
 # Run
