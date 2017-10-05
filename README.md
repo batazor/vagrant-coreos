@@ -9,7 +9,7 @@ Cluster for work with Kubernetes on CoreOS
 vagrant plugin install vagrant-env
 
 # Run
-mv .env.example .env
+cp .env.example .env
 vagrant up
 ```
 
