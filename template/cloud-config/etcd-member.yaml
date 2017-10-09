@@ -5,6 +5,7 @@ coreos:
       command: start
       content: |
         [Service]
+        Environment="ETCD_IMAGE_URL=%{ETCD_IMAGE_URL}"
         Environment="ETCD_IMAGE_TAG=%{ETCD_IMAGE_TAG}"
         Environment="ETCD_USER=etcd"
         Environment='ETCD_DATA_DIR=/var/lib/etcd'
