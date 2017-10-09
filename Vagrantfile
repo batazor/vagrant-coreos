@@ -79,8 +79,8 @@ Vagrant.configure("2") do |config|
       etcd_units[0]['content'] = etcd_units[0]['content'] % {
         :ETCD_NODE_NAME => vm_name,
         :ETCD_INITIAL_CLUSTER => initial_etcd_cluster,
-        :ETCD_IMAGE_TAG => ENV['ETCD_IMAGE_TAG'],
         :ETCD_IMAGE_URL => ENV['ETCD_IMAGE_URL'],
+        :ETCD_IMAGE_TAG => ENV['ETCD_IMAGE_TAG']
       }
 
       user_data["coreos"]["units"] += etcd_units
