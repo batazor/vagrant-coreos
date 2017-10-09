@@ -9,7 +9,6 @@ require 'yaml'
 # PATH
 CLOUD_CONFIG_PATH    = File.expand_path("template/cloud-config/user_data.yaml")
 ETCD_CONFIG_PATH     = File.expand_path("template/cloud-config/etcd-member.yaml")
-FLANNEL_CONFIG_PATH  = File.expand_path("template/cloud-config/flannel.yaml")
 
 def getIP(num)
   return "172.17.8.#{num+100}"
@@ -84,10 +83,6 @@ Vagrant.configure("2") do |config|
       }
 
       user_data["coreos"]["units"] += etcd_units
-
-      # FLANNEL CONFIG =========================================================
-      flannel = YAML.load(IO.readlines(FLANNEL_CONFIG_PATH)[1..-1].join)
-      user_data["coreos"]["units"] += flannel["coreos"]["units"]
 
       # ETCD CONFIG ============================================================
 
