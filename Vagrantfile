@@ -8,7 +8,7 @@ require 'yaml'
 
 # PATH
 CLOUD_CONFIG_PATH    = File.expand_path("template/cloud-config/user_data.yaml")
-ETCD_CONFIG_PATH     = File.expand_path("template/cloud-config/etcd-member.yaml")
+# ETCD_CONFIG_PATH     = File.expand_path("template/cloud-config/etcd-member.yaml")
 
 def getIP(num)
   return "172.17.8.#{num+100}"
@@ -32,8 +32,8 @@ Vagrant.configure("2") do |config|
   $vb_cpuexecutioncap = ENV['VB_CPUEXECUTIONCAP'].to_i
 
   # ETCD =========================================================================
-  etcdIPs = [*1..$num_instances].map{ |i| getIP(i) }
-  initial_etcd_cluster = etcdIPs.map.with_index{ |ip, i| "#{"%s-%02d" % [$instance_name_prefix, (i + 1)]}=http://#{ip}:2380" }.join(",")
+  # etcdIPs = [*1..$num_instances].map{ |i| getIP(i) }
+  # initial_etcd_cluster = etcdIPs.map.with_index{ |ip, i| "#{"%s-%02d" % [$instance_name_prefix, (i + 1)]}=http://#{ip}:2380" }.join(",")
 
 
   # Every Vagrant development environment requires a box. You can search for
@@ -78,26 +78,24 @@ Vagrant.configure("2") do |config|
       user_data = YAML.load(IO.readlines(CLOUD_CONFIG_PATH)[1..-1].join)
 
       # ETCD CONFIG ============================================================
-      etcd = YAML.load(IO.readlines(ETCD_CONFIG_PATH)[1..-1].join)
+      # etcd = YAML.load(IO.readlines(ETCD_CONFIG_PATH)[1..-1].join)
+      #
+      # etcd_units = etcd['coreos']['units']
+      # etcd_units[0]['content'] = etcd_units[0]['content'] % {
+      #   :ETCD_NODE_NAME => vm_name,
+      #   :ETCD_INITIAL_CLUSTER => initial_etcd_cluster,
+      #   :ETCD_IMAGE_URL => ENV['ETCD_IMAGE_URL'],
+      #   :ETCD_IMAGE_TAG => ENV['ETCD_IMAGE_TAG']
+      # }
+      # 
+      # user_data["coreos"]["units"] += etcd_units
 
-      etcd_units = etcd['coreos']['units']
-      etcd_units[0]['content'] = etcd_units[0]['content'] % {
-        :ETCD_NODE_NAME => vm_name,
-        :ETCD_INITIAL_CLUSTER => initial_etcd_cluster,
-        :ETCD_IMAGE_URL => ENV['ETCD_IMAGE_URL'],
-        :ETCD_IMAGE_TAG => ENV['ETCD_IMAGE_TAG']
-      }
-
-      user_data["coreos"]["units"] += etcd_units
-
-      # ETCD CONFIG ============================================================
-
-      etcd_config_file = Tempfile.new('etcd_config', :binmode => true)
-      etcd_config_file.write("#cloud-config\n#{user_data.to_yaml}")
-      etcd_config_file.close
-
-      config.vm.provision :file, :source => etcd_config_file.path, :destination => "/tmp/vagrantfile-user-data"
-      config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
+      # etcd_config_file = Tempfile.new('etcd_config', :binmode => true)
+      # etcd_config_file.write("#cloud-config\n#{user_data.to_yaml}")
+      # etcd_config_file.close
+      #
+      # config.vm.provision :file, :source => etcd_config_file.path, :destination => "/tmp/vagrantfile-user-data"
+      # config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
 
       # SYNCED FOLDERS =========================================================
       config.vm.synced_folder "cert", "/home/core/cert", type: "nfs"
