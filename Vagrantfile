@@ -64,6 +64,11 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--cpuexecutioncap", "#{$vb_cpuexecutioncap}"]
       end
 
+      # SSH ====================================================================
+      config.ssh.username = 'core'
+      config.ssh.password = 'pass'
+      config.ssh.insert_key = 'true'
+
       # NETWORK ================================================================
       # Create a private network, which allows host-only access to the machine
       # using a specific IP.
