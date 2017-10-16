@@ -11,7 +11,7 @@ CLOUD_CONFIG_PATH    = File.expand_path("template/cloud-config/user_data.yaml")
 # ETCD_CONFIG_PATH     = File.expand_path("template/cloud-config/etcd-member.yaml")
 
 def getIP(num)
-  return "172.17.8.#{num+100}"
+  return "172.17.7.#{num+100}"
 end
 
 Vagrant.configure("2") do |config|
@@ -87,7 +87,7 @@ Vagrant.configure("2") do |config|
       #   :ETCD_IMAGE_URL => ENV['ETCD_IMAGE_URL'],
       #   :ETCD_IMAGE_TAG => ENV['ETCD_IMAGE_TAG']
       # }
-      # 
+      #
       # user_data["coreos"]["units"] += etcd_units
 
       # etcd_config_file = Tempfile.new('etcd_config', :binmode => true)
