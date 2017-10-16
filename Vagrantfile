@@ -67,7 +67,6 @@ Vagrant.configure("2") do |config|
       # SSH ====================================================================
       config.ssh.username = 'core'
       config.ssh.password = 'pass'
-      config.ssh.insert_key = 'true'
 
       # NETWORK ================================================================
       # Create a private network, which allows host-only access to the machine
