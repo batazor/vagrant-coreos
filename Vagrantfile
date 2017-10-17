@@ -58,6 +58,15 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--cpuexecutioncap", "#{$vb_cpuexecutioncap}"]
       end
 
+      # SSH settings ===========================================================
+      config.ssh.insert_key = false
+      config.ssh.private_key_path = ["~/.ssh/id_rsa", "~/.vagrant.d/insecure_private_key"]
+      config.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "~/.ssh/authorized_keys"
+      config.vm.provision "shell", inline: <<-EOC
+        sudo sed -i -e "\\#PasswordAuthentication yes# s#PasswordAuthentication yes#PasswordAuthentication no#g" /etc/ssh/sshd_config
+        sudo systemctl restart sshd.socket
+      EOC
+
       # NETWORK ================================================================
       # Create a private network, which allows host-only access to the machine
       # using a specific IP.
