@@ -74,12 +74,6 @@ Vagrant.configure("2") do |config|
 
       # COREOS CONFIG ==========================================================
       user_data = YAML.load(IO.readlines(CLOUD_CONFIG_PATH)[1..-1].join)
-
-      # SYNCED FOLDERS =========================================================
-      config.vm.synced_folder "cert", "/home/core/cert", type: "nfs"
-
-      config.nfs.map_uid = Process.uid
-      config.nfs.map_gid = Process.gid
     end
   end
 end
