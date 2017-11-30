@@ -5,6 +5,10 @@ Cluster for work with Kubernetes on CoreOS
 ### Getting start
 
 ```
+# Clone project
+git clone https://github.com/batazor/vagrant-coreos.git
+cd vagrant-coreos
+
 # Install dependencies
 vagrant plugin install vagrant-env
 
