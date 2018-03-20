@@ -73,7 +73,10 @@ Vagrant.configure("2") do |config|
       config.vm.network :private_network, ip: getIP(i)
 
       # COREOS CONFIG ==========================================================
-      user_data = YAML.load(IO.readlines(CLOUD_CONFIG_PATH)[1..-1].join)
+      # user_data = YAML.load(IO.readlines(CLOUD_CONFIG_PATH)[1..-1].join)
+      config.vm.provision :file, :source => "#{CLOUD_CONFIG_PATH}", :destination => "/tmp/vagrantfile-user-data"
+      config.vm.provision :shell, inline: "mkdir -p /var/lib/coreos-vagrant", :privileged => true
+      config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
     end
   end
 end

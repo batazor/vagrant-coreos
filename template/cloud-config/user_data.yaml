@@ -9,3 +9,8 @@ coreos:
       command: stop
     - name: locksmithd.service
       command: stop
+
+passwd:
+  users:
+    - name: core
+      groups: [ sudo, docker ]

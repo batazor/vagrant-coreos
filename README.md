@@ -15,6 +15,9 @@ vagrant plugin install vagrant-env
 # Run
 cp .env.example .env
 vagrant up
+
+# Connect (example)
+ssh core@172.17.7.101
 ```
 
 ### Setting
