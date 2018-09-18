@@ -6,48 +6,15 @@ coreos:
   update:
     reboot-strategy: off
   units:
-    - name: etcd2.service
-      command: stop
     - name: sshd.service
       command: start
     - name: flanneld.service
       command: stop
-    - name: docker.service
-      drop-ins:
-      - name: 50-insecure-registry.conf
-        content: |
-          [Service]
-          Environment='DOCKER_OPTS=--insecure-registry="registry.example.io:5000"'
       command: start
     - name: update-engine.service
       command: stop
     - name: locksmithd.service
       command: stop
-    - name: 00-eth.network
-      command: start
-      content: |
-        [Match]
-        Name=eth*
-
-        [Network]
-        Bond=bond0
-    - name: 10-bond0.netdev
-      command: start
-      content: |
-        [NetDev]
-        Name=bond0
-        Kind=bond
-
-        [Bond]
-        Mode=1
-    - name: 20-bond0.network
-      command: start
-      content: |
-        [Match]
-        Name=bond0
-
-        [Network]
-        DHCP=true
 
 users:
   - name: batazor
@@ -57,41 +24,8 @@ users:
     - docker
 
 write_files:
-- path: /etc/modprobe.d/bonding.conf
-  content: |
-    # Prevent kernel from automatically creating bond0 when the module is loaded.
-    # This allows systemd-networkd to create and apply options to bond0.
-    options bonding max_bonds=0
-
-- path: /tmp/reset-interfaces
-  permissions: 0700
-  owner: root
-  content: |
-    #!/bin/bash
-    logger "Resetting network interfaces for bonding."
-    ip link set enp1s0f0 down
-    ip link set enp1s0f1 down
-    systemctl restart systemd-networkd
-    logger "Network interfaces have been reset"
-    rm /tmp/reset-interfaces
-
 - path: "/etc/resolv.conf"
   permissions: "0644"
   owner: "root"
   content: |
     nameserver 8.8.8.8
-
-# https://sandro-keil.de/blog/2015/03/11/logrotate-for-docker-container/
-- path: "/etc/logrotate.d/docker-container"
-  permissions: "0644"
-  owner: "root"
-  content: |
-    /var/lib/docker/containers/*/*.log {
-      rotate 5
-      daily
-      compress
-      size=1M
-      missingok
-      delaycompress
-      copytruncate
-    }
